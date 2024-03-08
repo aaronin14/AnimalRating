@@ -37,7 +37,7 @@
     <ListView
         android:id="@+id/animal_lv"
         android:layout_width="0dp"
-        android:layout_height="275dp"
+        android:layout_height="250dp"
         app:layout_constraintBottom_toTopOf="@+id/clear_rating_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.00"
@@ -46,19 +46,20 @@
         app:layout_constraintVertical_bias="0.05" />
 
     <ImageView
-        android:id="@+id/selected_animal_image"
+        android:id="@+id/animal_image"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:visibility="invisible"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@id/clear_rating_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rated_animal_title_tv"
+        app:layout_constraintTop_toBottomOf="@+id/recently_rated_animal_title_tv"
         app:layout_constraintVertical_bias="0.25" />
 
     <TextView
-        android:id="@+id/rated_animal_title_tv"
+        android:id="@+id/recently_rated_animal_title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="The most recently rated animal"
@@ -69,42 +70,44 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/animal_lv"
-        app:layout_constraintVertical_bias="0.15" />
+        app:layout_constraintVertical_bias="0.10" />
 
     <TextView
-        android:id="@+id/selected_animal_name_tv"
+        android:id="@+id/animal_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
         android:text="Animal"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/selected_animal_image"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/animal_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintTop_toTopOf="@id/selected_animal_image" />
+        app:layout_constraintStart_toEndOf="@+id/animal_image"
+        app:layout_constraintTop_toTopOf="@id/animal_image"
+        app:layout_constraintVertical_bias="0.20" />
 
     <TextView
-        android:id="@+id/selected_animal_rating_tv"
+        android:id="@+id/animal_rating_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:text="Rating:"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@+id/selected_animal_name_tv"
-        app:layout_constraintStart_toStartOf="@id/selected_animal_name_tv" />
+        app:layout_constraintStart_toStartOf="@id/animal_name_tv"
+        app:layout_constraintTop_toBottomOf="@+id/animal_name_tv" />
 
     <RatingBar
-        android:id="@+id/selected_animal_rating_bar"
+        android:id="@+id/animal_rating_bar"
         style="@android:style/Widget.DeviceDefault.Light.RatingBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintStart_toEndOf="@+id/selected_animal_rating_tv"
-        app:layout_constraintTop_toTopOf="@id/selected_animal_rating_tv" />
+        app:layout_constraintStart_toEndOf="@+id/animal_rating_tv"
+        app:layout_constraintTop_toTopOf="@id/animal_rating_tv" />
 
     <Button
         android:id="@+id/clear_rating_button"

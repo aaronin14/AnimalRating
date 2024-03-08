@@ -15,29 +15,31 @@ class AnimalRating : AppCompatActivity() {
         setContentView(R.layout.activity_animal_rating)
 
         // Get the animal name
-        val animalName = intent.getStringExtra("animalName").toString()
+        val animalName = intent.getStringExtra("selectedAnimalName").toString()
         val selectedAnimalImage = when(animalName) {
             "Dog" -> R.drawable.dog
             "Cat" -> R.drawable.cat
             "Bear" -> R.drawable.bear
             else -> R.drawable.rabbit
         }
-        findViewById<ImageView>(R.id.selected_animal_image).setImageResource(selectedAnimalImage)
-        findViewById<TextView>(R.id.selected_animal_name_tv).text = animalName
+        findViewById<ImageView>(R.id.animal_image).setImageResource(selectedAnimalImage)
+        findViewById<TextView>(R.id.animal_name_tv).text = animalName
 
     }
 
     fun saveRating(view: View){ // Send data back to MainActivity
+
         Log.i(TAG, "saveRating was called")
+        // Prep the editor
         val sharedPref = getSharedPreferences("animal-rating.txt", MODE_PRIVATE)
         val editor = sharedPref.edit()
-        val animalName = findViewById<TextView>(R.id.selected_animal_name_tv).text.toString()
-        val myRatingBar = findViewById<RatingBar>(R.id.selected_animal_rating_bar)
+
+        val animalName = findViewById<TextView>(R.id.animal_name_tv).text.toString()
+        val myRatingBar = findViewById<RatingBar>(R.id.animal_rating_bar)
         val rating = myRatingBar.rating.toString()
         editor.putString("mostRecent", animalName)
-        editor.putString("rating", rating)
+        editor.putString(animalName, rating)
         editor.apply()
-        Log.i(TAG, "animal is " + animalName)
-        Log.i(TAG, "rating is " + rating)
+        finish()
     }
 }

@@ -7,7 +7,7 @@
     tools:context=".AnimalRating">
 
     <TextView
-        android:id="@+id/selected_animal_name_tv"
+        android:id="@+id/animal_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Animal"
@@ -21,19 +21,19 @@
         app:layout_constraintVertical_bias="0.04"/>
 
     <ImageView
-        android:id="@+id/selected_animal_image"
+        android:id="@+id/animal_image"
         android:layout_width="240dp"
         android:layout_height="170dp"
         app:layout_constraintBottom_toTopOf="@id/save_rating_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/selected_animal_name_tv"
+        app:layout_constraintTop_toBottomOf="@id/animal_name_tv"
         app:layout_constraintVertical_bias="0.15" />
 
 
     <TextView
-        android:id="@+id/selected_animal_rating_tv"
+        android:id="@+id/animal_rating_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="What is your rating?"
@@ -41,18 +41,18 @@
         app:layout_constraintBottom_toTopOf="@id/save_rating_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selected_animal_image"
+        app:layout_constraintTop_toBottomOf="@+id/animal_image"
         app:layout_constraintVertical_bias="0.25" />
 
     <RatingBar
-        android:id="@+id/selected_animal_rating_bar"
+        android:id="@+id/animal_rating_bar"
         style="@android:style/Widget.DeviceDefault.Light.RatingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/selected_animal_rating_tv"
+        app:layout_constraintTop_toBottomOf="@id/animal_rating_tv"
         app:layout_constraintBottom_toTopOf="@id/save_rating_button"
         app:layout_constraintVertical_bias="0.2"/>
 

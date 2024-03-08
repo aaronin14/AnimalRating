@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.ListView
@@ -13,6 +14,9 @@ import androidx.core.view.isVisible
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
+    private var animalList = mutableListOf("Dog","Cat","Bear","Rabbit")
+    private lateinit var animalAdapter : ArrayAdapter<String>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,8 +25,7 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "onCreate was called")
 
         // Setup Animal ListView
-        val animalList = listOf("Dog","Cat","Bear","Rabbit")
-        val animalAdapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, animalList)
+        animalAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, animalList)
         val animalListView = findViewById<ListView>(R.id.animal_lv)
         animalListView.adapter = animalAdapter
         // Setup myIntent
@@ -30,15 +33,18 @@ class MainActivity : AppCompatActivity() {
 
         // AnimalListView onClickListener
         animalListView.setOnItemClickListener { list, item, position, id ->
-            val animalName = when(position) {
+            val selectedAnimalName = when(position) {
                 0 -> "Dog"
                 1 -> "Cat"
                 2 -> "Bear"
                 else -> "Rabbit"
             }
-            myIntent.putExtra("animalName", animalName)
+
+            myIntent.putExtra("selectedAnimalName", selectedAnimalName)
             startActivity(myIntent)
         }
+
+
 
     }
 
@@ -46,54 +52,90 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         // Load data using sharedPreference
         val sharedPref = getSharedPreferences("animal-rating.txt", MODE_PRIVATE)
-        val ratedAnimalName = sharedPref.getString("mostRecent","")
-        val ratedAnimalRating = sharedPref.getString("rating","")
+        val mostRecentlyRated = sharedPref.getString("mostRecent","")
 
-        val ratedAnimalNameTV = findViewById<TextView>(R.id.selected_animal_name_tv)
-        val animalImage = findViewById<ImageView>(R.id.selected_animal_image)
-        val animalRatingBar = findViewById<RatingBar>(R.id.selected_animal_rating_bar)
-        Log.i(TAG, "We got into the onResume()")
-        Log.i(TAG, "ratedAnimalName is " + ratedAnimalName)
-        Log.i(TAG, "ratedAnimalRating is " + ratedAnimalRating)
-
-        if (ratedAnimalName != null) {
-            Log.i(TAG, "ratedAnimalName is not null")
-            if (ratedAnimalName.isEmpty()) {
-                Log.i(TAG, "ratedAnimalName is empty")
-                animalImage.isVisible = false
-                ratedAnimalNameTV.isVisible = false
-                animalRatingBar.isVisible = false
-                findViewById<TextView>(R.id.rated_animal_title_tv).isVisible = false
-                findViewById<TextView>(R.id.selected_animal_rating_tv).isVisible = false
+        if (mostRecentlyRated != null) {
+            // If mostRecentlyRated is empty and null then keep everything invisible
+            if (mostRecentlyRated.isEmpty()) {
+                visibleSwitch(false)    // Keep visible OFF
 
             } else {
-                // Prep image resource
-                val selectedAnimalImage = when (ratedAnimalName) {
+                // Display the AnimalRatingActivity in the MainActivity
+                val animalImage = when (mostRecentlyRated) {
                     "Dog" -> R.drawable.dog
                     "Cat" -> R.drawable.cat
                     "Bear" -> R.drawable.bear
                     else -> R.drawable.rabbit
                 }
+                findViewById<ImageView>(R.id.animal_image).setImageResource(animalImage)                // Set recent animal image
+                findViewById<TextView>(R.id.animal_name_tv).text = mostRecentlyRated                    // Set recent animal name TextView
 
-                // Set rated animal image
-                animalImage.setImageResource(selectedAnimalImage)
+                val mostRecentRating = sharedPref.getString(mostRecentlyRated,"-")
+                if (mostRecentRating != null) {
+                    findViewById<RatingBar>(R.id.animal_rating_bar).rating = mostRecentRating.toFloat() // Set rated animal rating
+                }
+                visibleSwitch(true)     // Set visible ON
 
-                // Set rated animal name
-                ratedAnimalNameTV.text = ratedAnimalName
+                // Update the ListView
+                /*
+                val allRatingsArray = ArrayList<String>()
+                val allRatings = sharedPref.all
+                allRatings.forEach { entry ->
 
-                // Set rated animal rating
-                if (ratedAnimalRating != null) {
-                    animalRatingBar.rating = ratedAnimalRating.toFloat()
+                    if (entry.key != "mostRecent") {
+                        if (entry.value != "")
+                            allRatingsArray.add("${entry.key} -- Rating: ${entry.value}/5")
+                        else
+                            allRatingsArray.add(entry.key)
+                    }
+                }
+                val newList = ArrayList<String>()
+                animalList.sorted().zip(allRatingsArray.toList().sorted()) { original, new ->
+                    Log.i(TAG,"${original} + ${new}")
+                    if (original != new)
+                        newList.add(new)
+                    else
+                        newList.add(original)
                 }
 
-                animalImage.isVisible = true
-                ratedAnimalNameTV.isVisible = true
-                animalRatingBar.isVisible = true
-                findViewById<TextView>(R.id.rated_animal_title_tv).isVisible = true
-                findViewById<TextView>(R.id.selected_animal_rating_tv).isVisible = true
+                animalAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, newList)
+                findViewById<ListView>(R.id.animal_lv).adapter = animalAdapter
+                */
+
+                for ( (index, animalName) in animalList.withIndex()) {
+                    val rating = sharedPref.getString(animalName, "-1.0")
+                    if (rating != null) {
+                        if (rating.toDouble() != -1.0) {
+                            Log.i(TAG, "Here")
+                            animalList[index] = "$animalName -- Rating: ${rating}/5"
+                        }
+                    }
+                }
+
+                animalAdapter.notifyDataSetChanged()
+
             }
         }
 
+    }
+
+    fun clearRatingButton(view: View) {
+        visibleSwitch(false)
+        val sharedPref = getSharedPreferences("animal-rating.txt", MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.clear()
+        editor.apply()
+        animalAdapter.notifyDataSetChanged()
+
+    }
+
+
+    private fun visibleSwitch(status : Boolean) {
+        findViewById<TextView>(R.id.recently_rated_animal_title_tv).isVisible = status
+        findViewById<ImageView>(R.id.animal_image).isVisible = status
+        findViewById<TextView>(R.id.animal_name_tv).isVisible = status
+        findViewById<TextView>(R.id.animal_rating_tv).isVisible = status
+        findViewById<RatingBar>(R.id.animal_rating_bar).isVisible = status
     }
 
 }
