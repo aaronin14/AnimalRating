@@ -13,7 +13,6 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 
 class MainActivity : AppCompatActivity() {
-    private val TAG = "MainActivity"
     private var animalList = mutableListOf("Dog","Cat","Bear","Rabbit")
     private lateinit var animalAdapter : ArrayAdapter<String>
 
@@ -21,9 +20,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        Log.i(TAG, "onCreate was called")
-
         // Setup Animal ListView
         animalAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, animalList)
         val animalListView = findViewById<ListView>(R.id.animal_lv)
@@ -32,14 +28,8 @@ class MainActivity : AppCompatActivity() {
         val myIntent = Intent(this,AnimalRating::class.java)
 
         // AnimalListView onClickListener
-        animalListView.setOnItemClickListener { list, item, position, id ->
-            val selectedAnimalName = when(position) {
-                0 -> "Dog"
-                1 -> "Cat"
-                2 -> "Bear"
-                else -> "Rabbit"
-            }
-
+        animalListView.setOnItemClickListener { parent, item, position, id ->
+            val selectedAnimalName = parent.getItemAtPosition(position).toString().split(" ")[0]
             myIntent.putExtra("selectedAnimalName", selectedAnimalName)
             startActivity(myIntent)
         }
@@ -57,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         if (mostRecentlyRated != null) {
             // If mostRecentlyRated is empty and null then keep everything invisible
             if (mostRecentlyRated.isEmpty()) {
-                visibleSwitch(false)    // Keep visible OFF
+                visibleSwitch(false)
 
             } else {
                 // Display the AnimalRatingActivity in the MainActivity
@@ -74,33 +64,7 @@ class MainActivity : AppCompatActivity() {
                 if (mostRecentRating != null) {
                     findViewById<RatingBar>(R.id.animal_rating_bar).rating = mostRecentRating.toFloat() // Set rated animal rating
                 }
-                visibleSwitch(true)     // Set visible ON
-
-                // Update the ListView
-                /*
-                val allRatingsArray = ArrayList<String>()
-                val allRatings = sharedPref.all
-                allRatings.forEach { entry ->
-
-                    if (entry.key != "mostRecent") {
-                        if (entry.value != "")
-                            allRatingsArray.add("${entry.key} -- Rating: ${entry.value}/5")
-                        else
-                            allRatingsArray.add(entry.key)
-                    }
-                }
-                val newList = ArrayList<String>()
-                animalList.sorted().zip(allRatingsArray.toList().sorted()) { original, new ->
-                    Log.i(TAG,"${original} + ${new}")
-                    if (original != new)
-                        newList.add(new)
-                    else
-                        newList.add(original)
-                }
-
-                animalAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, newList)
-                findViewById<ListView>(R.id.animal_lv).adapter = animalAdapter
-                */
+                visibleSwitch(true)
 
                 for ( (index, animal) in animalList.withIndex()) {
                     val animalName = animal.split(" ")[0]

@@ -4,4 +4,4 @@
 
 # Animal Rating App
 
-- 
+- This is an app that allows the user to rate different animals and save the rating for future reference

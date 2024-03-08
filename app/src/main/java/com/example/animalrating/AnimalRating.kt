@@ -9,7 +9,6 @@ import android.widget.RatingBar
 import android.widget.TextView
 
 class AnimalRating : AppCompatActivity() {
-    private val TAG = "AnimalRatingActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_animal_rating)
@@ -39,8 +38,6 @@ class AnimalRating : AppCompatActivity() {
     }
 
     fun saveRating(view: View){ // Send data back to MainActivity
-
-        Log.i(TAG, "saveRating was called")
         // Prep the editor
         val sharedPref = getSharedPreferences("animal-rating.txt", MODE_PRIVATE)
         val editor = sharedPref.edit()
