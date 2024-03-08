@@ -102,16 +102,15 @@ class MainActivity : AppCompatActivity() {
                 findViewById<ListView>(R.id.animal_lv).adapter = animalAdapter
                 */
 
-                for ( (index, animalName) in animalList.withIndex()) {
+                for ( (index, animal) in animalList.withIndex()) {
+                    val animalName = animal.split(" ")[0]
                     val rating = sharedPref.getString(animalName, "-1.0")
                     if (rating != null) {
                         if (rating.toDouble() != -1.0) {
-                            Log.i(TAG, "Here")
                             animalList[index] = "$animalName -- Rating: ${rating}/5"
                         }
                     }
                 }
-
                 animalAdapter.notifyDataSetChanged()
 
             }
@@ -125,6 +124,10 @@ class MainActivity : AppCompatActivity() {
         val editor = sharedPref.edit()
         editor.clear()
         editor.apply()
+        for ( (index, animal) in animalList.withIndex()) {
+            val animalName = animal.split(" ")[0]
+            animalList[index] = animalName
+        }
         animalAdapter.notifyDataSetChanged()
 
     }

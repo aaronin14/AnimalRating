@@ -25,6 +25,17 @@ class AnimalRating : AppCompatActivity() {
         findViewById<ImageView>(R.id.animal_image).setImageResource(selectedAnimalImage)
         findViewById<TextView>(R.id.animal_name_tv).text = animalName
 
+
+        val sharedPref = getSharedPreferences("animal-rating.txt", MODE_PRIVATE)
+        val ratingBar = findViewById<RatingBar>(R.id.animal_rating_bar)
+        val rating = sharedPref.getString(animalName,"-")
+
+        if (rating != null) {
+            if (rating != "-")
+                ratingBar.rating = rating.toFloat()
+            else
+                ratingBar.rating = 0.0F
+        }
     }
 
     fun saveRating(view: View){ // Send data back to MainActivity
